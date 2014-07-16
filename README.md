@@ -77,9 +77,11 @@ Runs jobs specified in templates/jobtemplate.sh with parameter
 template file templates/proptemplate.sh in which the parameters `[@Pn]`
 are subsituted:
 
-`[@P1] is set to "astring"
-[@P2] ranges from 0 to 10 in steps of 2
-[@P3] ranges from -5 to 5 in steps of 1`
+`[@P1] is set to "astring"`
+
+`[@P2] ranges from 0 to 10 in steps of 2`
+
+`[@P3] ranges from -5 to 5 in steps of 1`
  
 This would create  1 * 6 * 11 = 66 jobs
 
