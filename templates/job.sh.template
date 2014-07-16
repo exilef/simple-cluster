@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# Simpler Cluster Framework
+# Copyright (C) 2013, F. Effenberger. effenberger.felix@gmail.com
+#
+# Simple cluster jobs framework
+# Copyright (C) 2011, J. Lizier. joseph.lizier@gmail.com
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# ---------------------------------------------------------------------
+#
+# Adjust/uncomment the following lines variables according to your
+# cluster submission system, paramteres [@Pn] are expanded in this file
+#
+# #$ -cwd
+# #$ -N [@P1]-[@P2]
+# #$ -l mem=3.5G,short
+# #$ -o [@LOGFILE]
+# #$ -e [@ERRFILE]
+
+# 1. [Optional]: Set your current working directory for the process.
+# For my cluster this is done with "$ -cwd" above.
+# For job submission in other cluster types, uncomment the following line:
+# cd YOUR_DIR
+
+# 2. Load any modules or set any paths you require.
+# E.g. for java, set the java path or load the java module: (depending on which your cluster requires you to use)
+# module load java/1.6.0_14
+# JAVA_PATH=/usr/bin
+
+# 3. Template for starting your process:
+# You can use [@PROPSFILE], [@LOGFILE] and [@ERRFILE] to refer to the specific input properties file and log files created/assigned for this process.
+# example: COMMAND="$JAVA_PATH/java -showversion -Xmx512m -classpath "./bin/somejar.jar" main.class [@PROPSFILEESC]" -o > [@LOGFILE] 2> [@ERRFILE]
+
+# 4. Set completion hook. Do something after completion
+function afterSuccessfulCompletion {
+	# e. g. send email, copy/move data to some (remote) destination
+	# parameter variables [@Pn] are substituted
+	# e.g.: ssh somehose -e "mkdir -p ~/somedir/data/[@P1]" &&
+	#       scp [@P1]/* somehost:somedir/data/[@P1] && rm -rf [@P1]/*
+	return
+}
+
+# 5. Set failure hook. Do something after failure
+function afterFailure {
+	# note: (re)submission of jobs on worker nodes not possible
+	#       in most clusters
+	return
+}
+
+
+echo "###SCRIPT $0 STARTED###"
+
+echo "RUNNING COMMAND '$COMMAND'"
+$COMMAND
+RETCODE=$?
+echo "COMMAND RETURNED $RETCODE"
+
+if [[ $RETCODE -eq 0 ]]; then
+	# command succeeded
+	echo "--COMMAND SUCCEEDED--"
+	echo "[@JOBSCRIPT]" >> "[@BASEPATH]/run/JOBSDONE"
+
+	rm -f "[@JOBSCRIPT]"
+
+	# clean from failed
+	if [ -e "[@BASEPATH]/run/JOBSFAILED" ]; then
+		sed -i '\:[@JOBSCRIPT]: d' "[@BASEPATH]/run/JOBSFAILED"
+	fi
+
+	# run completion hook
+	afterSuccessfulCompletion
+else
+	# command failed
+	echo "--COMMAND FAILED--"
+	# log failure
+	if [[ ! -e "[@BASEPATH]/run/JOBSFAILED" || -z $(cat "[@BASEPATH]/run/JOBSFAILED" | grep -e '[@JOBSCRIPT]') ]]; then
+		echo "[@JOBSCRIPT]" >> "[@BASEPATH]/run/JOBSFAILED"
+	fi
+	
+	afterFailure
+fi
+
+echo "###SCRIPT $0 STOPPED###"
