@@ -1,9 +1,9 @@
 simpler-cluster
 ===============
 
-Convenience framework for working with clusters managed
-with the Sun Grid Engine, i.e. for which jobs are managed by the tools
-qsub and qstat.
+Convenience framework for working with clusters managed with the Sun
+Grid Engine or [Open Grid Scheduler](http://gridscheduler.sourceforge.net/),
+i.e. for which jobs are managed by the tools qsub and qstat.
 
 Based upon [Simple cluster jobs framework](http://lizier.me/joseph/software/simplecluster/)
 by J. Lizier, modified to only use bash and not to depend on ksh.
