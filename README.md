@@ -41,11 +41,11 @@ A typical usage scenario is the following:
 
 Submits a single job.
 
-Arguments: <JOBTEMPLATE> <PROPSTEMPLATE or - > [ <P1> <P2> <P3> ... ]"
+Arguments: `<JOBTEMPLATE> <PROPSTEMPLATE or - > [ <P1> <P2> <P3> ... ]"`
 
 Where JOBTEMPLATE specified template file for job to be created,
 PROPSTEMPLATE the (optional) template file of the props file to be
-used and P1 to Pn the parameter values of [@P1] to [@Pn]
+used and P1 to Pn the parameter values of `[@P1]` to `[@Pn]`
 If no template for the properties file is to be used, pass "-" as
 second argument
 
@@ -54,7 +54,7 @@ second argument
 Submits several processes with an arbitray number of
 parameters updated in the input file for each run.
 
-Arguments: <JOBTEMPL> <<PROPSTEMPL> or - > <E1> [ <E2> <E3> ... ],
+Arguments: `<JOBTEMPL> <PROPSTEMPL or - > <E1> [ <E2> <E3> ... ]`,
 
 Where JOBTEMPLATE specifies the template file for job to be created,
 PROPSTEMPLATE the (optional) template file of the properties file to
@@ -63,23 +63,23 @@ be used and and En=<START INCREMENT STOP> or En=<VALUE ->"
 If no template for the properties file is to be used, pass "-" as
 second argument
 
-Any number of tuples En of the form <VALUE -> or
-<START INCREMENT STOP> can be supplied,  where a tuple of the form
-<VALUE -> specifies a fixed input parameter  and a tuple of the form
-<START INCREMENT STOP> a range of integer numbers.
-These are mapped to the arguments [@P1] to [@Pn]
+Any number of tuples En of the form `<VALUE ->` or
+`<START INCREMENT STOP>` can be supplied,  where a tuple of the form
+`<VALUE ->` specifies a fixed input parameter  and a tuple of the form
+`<START INCREMENT STOP>` a range of integer numbers.
+These are mapped to the arguments `[@P1]` to `[@Pn]`
 
-Example ./runmany.sh templates/jobtemplate.sh 
+Example `./runmany.sh templates/jobtemplate.sh 
                      templates/proptemplate.sh 
-                     "astring" - 0 2 10 -5 1 5
+                     "astring" - 0 2 10 -5 1 5`
 
 Runs jobs specified in templates/jobtemplate.sh with parameter
-template file templates/proptemplate.sh in which the parameters [@Pn]
+template file templates/proptemplate.sh in which the parameters `[@Pn]`
 are subsituted:
 
-[@P1] is set to "astring"
+`[@P1] is set to "astring"
 [@P2] ranges from 0 to 10 in steps of 2
-[@P3] ranges from -5 to 5 in steps of 1
+[@P3] ranges from -5 to 5 in steps of 1`
  
 This would create  1 * 6 * 11 = 66 jobs
 
